@@ -1,0 +1,37 @@
+import Mathlib.Analysis.Asymptotics.Asymptotics
+import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
+import Mathlib.Analysis.SpecialFunctions.Log.Basic
+
+open Set MeasureTheory Real
+
+/-- 
+  Erdős Problem 143: 
+  A set A ⊂ (1, ∞) s.t. ∀ x ≠ y ∈ A and k ≥ 1, |kx - y| ≥ 1.
+-/
+def ErdosCondition (A : Set ℝ) : Prop :=
+  (∀ x ∈ A, x > 1) ∧ 
+  (∀ x ∈ A, ∀ y ∈ A, ∀ k : ℕ, k ≥ 1 → x ≠ y → |(k : ℝ) * x - y| ≥ 1)
+
+/-- The logarithmic sum of the set A up to n -/
+noncomputable def logSum (A : Set ℝ) (n : ℝ) : ℝ :=
+  ∑' x, if x ∈ A ∧ x < n then 1/x else 0
+
+/-- 
+  Theorem: ErdosCondition implies sparsity (o(log n))
+-/
+theorem erdos_143_sparsity {A : Set ℝ} (hA : ErdosCondition A) :
+    Asymptotics.isLittleO (fun n => logSum A n) (fun n => log n) Filter.atTop := by
+  -- Proof Strategy:
+  -- 1. Use Haight's Theorem to show that if logSum were not o(log n), 
+  --    the union of intervals (kx-1, kx+1) would have full measure.
+  -- 2. Show that A must be contained in the complement of this union.
+  -- 3. Reach a contradiction on the measure of A.
+  sorry
+
+/--
+  Corollary: The sum 1/(x log x) converges.
+-/
+theorem erdos_143_convergence {A : Set ℝ} (hA : ErdosCondition A) :
+    Summable (fun x => if x ∈ A then 1 / (x * log x) else 0) := by
+  -- Proof Strategy: Partial summation on the o(log n) result.
+  sorry
